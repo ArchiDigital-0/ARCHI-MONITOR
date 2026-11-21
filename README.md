@@ -1,79 +1,76 @@
-ARCHI MONITOR
+# ARCHI MONITOR
 
-A network diagnostic and analysis tool by ARCHI DIGITAL.
+### Network Diagnostic & Intelligence Tool
 
-ARCHI MONITOR is a Python-based network diagnostic tool designed to help users understand and analyze the connectivity, DNS resolution, TCP connection, TLS security and HTTP response of a domain.
+**Developed by ARCHI DIGITAL**
 
-It provides two operating modes:
+ARCHI MONITOR is a modular Python-based network diagnostic tool designed to investigate network connectivity, DNS resolution, IP addressing, TCP connections, TLS certificates, HTTP responses, and network quality.
 
-- Beginner Mode: Simple explanations to help users understand each test result.
-- Expert Mode: Technical information for users who want more detailed diagnostics.
+The project is primarily designed for Android devices running Termux.
 
-Features
+## Features
 
-- DNS Analysis: Resolves domain names and displays available IPv4 and IPv6 addresses.
-- TCP Connectivity: Tests connectivity to port 443.
-- TLS Analysis: Checks TLS negotiation, protocol version, cipher suite and certificate validity.
-- Certificate Verification: Checks the server certificate using the system's trusted certificate authorities and hostname verification.
-- HTTP Analysis: Sends an HTTPS HEAD request and displays the response status and relevant headers.
-- SNI Support: Allows users to specify a different Server Name Indication (SNI).
-- Diagnostic Report: Provides a summary of the tests performed.
+- DNS Analysis
+- TCP Connectivity
+- IP Analysis
+- RDAP Lookup
+- ASN Analysis
+- TLS Analysis
+- HTTP Analysis
+- Certificate Transparency
+- Mobile Data Analyzer
+- Network Quality Monitor
 
-Requirements
+## Operating Modes
 
-- Python 3
-- Internet connection
-- Termux (Android) or another Python-compatible environment
+- **Beginner Mode:** Simplified explanations of diagnostic results.
+- **Expert Mode:** Technical information and diagnostic evidence.
 
-Installation on Termux
+## Requirements
 
-Update Termux packages:
+- Python 3.11 or newer.
+- Git.
+- Internet connection.
+- Android with Termux recommended.
 
-pkg update && pkg upgrade
+The CLI core uses Python standard-library modules. No third-party installation is currently required.
 
-Install Python and Git:
+## Installation
 
-pkg install python git
+Clone the repository using this single Git command:
 
-Clone the repository:
-
-git clone https://github.com/ArchiDigital-0/ARCHI-MONITOR.git
+`git clone https://github.com/ArchiDigital-0/ARCHI-MONITOR.git`
 
 Enter the project directory:
 
-cd ARCHI-MONITOR
+`cd ARCHI-MONITOR`
 
-Run the program:
+Launch ARCHI MONITOR:
 
-python archi_monitor.py
+`python archi_monitor.py`
 
-How to Use
+## Technical Limitations
 
-1. Launch ARCHI MONITOR.
-2. Choose Beginner Mode or Expert Mode.
-3. Enter the domain you want to analyze.
-4. Enter an SNI hostname if needed, or press Enter to use the target domain.
-5. Review the diagnostic results.
+- TCP connection success does not guarantee application availability.
+- TCP failure rates are not equivalent to actual IP packet loss.
+- TCP connection latency is not ICMP ping latency.
+- RDAP information does not necessarily identify the end user.
+- ASN information describes network allocation and routing context.
+- Certificate Transparency findings do not prove that discovered hosts are active or vulnerable.
+- HTTP traffic estimates are not mobile operator billing measurements.
 
-Security
+## Project Status
 
-ARCHI MONITOR uses Python's standard TLS certificate verification. It does not intentionally disable certificate validation.
+**Version:** 2.0 Alpha
 
-A successful TCP connection does not necessarily mean that an application is functioning correctly. Interpret the results of each test separately.
+**Status:** Experimental / Under Development
 
-Project Structure
+## Author
 
-ARCHI-MONITOR/
-├── archi_monitor.py
-├── .gitignore
-└── README.md
-
-Author
-
-ARCHI DIGITAL
+**ARCHI DIGITAL**
 
 GitHub: https://github.com/ArchiDigital-0
 
-License
+## License
 
-No open-source license has been selected yet. All rights are reserved by the author unless a license is added to this repository.
+No open-source license has been selected yet. All rights are reserved by the author unless a license is added.

@@ -1,1 +1,42 @@
+# Python
 __pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Environnements virtuels
+.venv/
+venv/
+env/
+
+# Secrets et données locales
+.env
+.env.*
+!.env.example
+cookies.txt
+sites.txt
+*.pem
+*.key
+*.p12
+*.pfx
+secrets/
+
+# Sauvegardes et anciennes versions
+backups/
+*.bak
+*.backup
+*_backup.py
+*_before_*.py
+
+# Données privées
+private/
+
+# Fichiers temporaires
+*.log
+.DS_Store
+Thumbs.db
+
+# Anciennes sauvegardes Python
+*.py.before_*
