@@ -2,6 +2,17 @@
 
 import ipaddress
 
+from core.display import (
+    Colors,
+    colorize,
+    heading,
+    section,
+    separator,
+    message,
+    profile_text,
+    is_expert,
+)
+
 from modules.dns_analyzer import DNSAnalyzer
 from modules.tcp_analyzer import TCPAnalyzer
 from modules.ip_auditor import IPAuditor
@@ -12,6 +23,7 @@ from modules.http_analyzer import HTTPAnalyzer
 from modules.ct_monitor import CertificateTransparencyMonitor
 from modules.mobile_data_analyzer import MobileDataAnalyzer
 from modules.network_quality_monitor import NetworkQualityMonitor
+from cli.zero_rating_lab import run_zero_rating_lab
 
 from cli.server_diagnostic import (
     ask_domain,
@@ -110,26 +122,179 @@ def run_network_quality_monitor():
         print("-", item)
 
 
+
 def run_independent_tool(mode):
+    expert = is_expert(mode)
+
     while True:
-        print("\n")
-        line()
-        print("          ARCHI MONITOR — OUTILS INDÉPENDANTS")
-        line()
+        print()
+        heading(
+            "ARCHI DIGITAL | DIAGNOSTIC LAB",
+            profile_text(
+                mode,
+                "CENTRE DES OUTILS DE DIAGNOSTIC",
+                "NETWORK DIAGNOSTICS CONSOLE",
+            ),
+        )
 
-        print("[1] Analyse DNS")
-        print("[2] Test TCP")
-        print("[3] Analyse IP")
-        print("[4] Recherche RDAP")
-        print("[5] Analyse ASN")
-        print("[6] Analyse TLS")
-        print("[7] Analyse HTTP")
-        print("[8] Certificate Transparency")
-        print("[9] Mesure du trafic HTTP mobile")
-        print("[10] Network Quality Monitor")
-        print("[0] Retour au menu principal")
+        message(
+            profile_text(
+                mode,
+                "PROFIL ACTIF : DÉBUTANT",
+                "ACTIVE PROFILE : EXPERT",
+            ),
+            Colors.GREEN if not expert else Colors.CYAN,
+        )
 
-        choice = input("\nSélectionne un outil : ").strip()
+        options = [
+            (
+                "1",
+                "ANALYSE DNS",
+                "DNS ANALYZER",
+                "Examiner un nom de domaine et ses adresses réseau.",
+                "DNS resolution and record inspection.",
+            ),
+            (
+                "2",
+                "TEST DE CONNEXION TCP",
+                "TCP CONNECTIVITY TEST",
+                "Vérifier si un serveur accepte une connexion sur un port.",
+                "TCP connection establishment and port verification.",
+            ),
+            (
+                "3",
+                "ANALYSE D'ADRESSE IP",
+                "IP ADDRESS AUDIT",
+                "Examiner une adresse IP et ses caractéristiques.",
+                "IP address inspection and classification.",
+            ),
+            (
+                "4",
+                "RECHERCHE RDAP",
+                "RDAP REGISTRATION INTELLIGENCE",
+                "Rechercher les informations d'enregistrement d'une IP.",
+                "Registration data and network allocation lookup.",
+            ),
+            (
+                "5",
+                "IDENTIFICATION DU RÉSEAU ASN",
+                "ASN NETWORK INTELLIGENCE",
+                "Identifier le réseau et son opérateur.",
+                "Autonomous System identification and network ownership.",
+            ),
+            (
+                "6",
+                "VÉRIFICATION DE LA SÉCURITÉ TLS",
+                "TLS SECURITY INSPECTION",
+                "Examiner la connexion sécurisée et son certificat.",
+                "TLS handshake and certificate inspection.",
+            ),
+            (
+                "7",
+                "ANALYSE DU PROTOCOLE HTTP",
+                "HTTP PROTOCOL ANALYSIS",
+                "Examiner la réponse d'un serveur web.",
+                "HTTP response and protocol behaviour analysis.",
+            ),
+            (
+                "8",
+                "TRANSPARENCE DES CERTIFICATS",
+                "CERTIFICATE TRANSPARENCY",
+                "Rechercher les certificats publiés pour un domaine.",
+                "Public certificate discovery and CT log inspection.",
+            ),
+            (
+                "9",
+                "MESURE DU TRAFIC WEB MOBILE",
+                "MOBILE HTTP TRAFFIC ANALYZER",
+                "Estimer les données échangées avec un serveur web.",
+                "HTTP application-level traffic measurement.",
+            ),
+            (
+                "10",
+                "QUALITÉ DE LA CONNEXION RÉSEAU",
+                "NETWORK QUALITY MONITOR",
+                "Mesurer les temps de connexion TCP et les échecs.",
+                "TCP connection latency and failure-rate monitoring.",
+            ),
+            (
+                "11",
+                "LABORATOIRE ZERO-RATING",
+                "ZERO-RATING LAB",
+                "Examiner une connexion selon les paramètres SNI, IP, port et Host.",
+                "Analyze target connectivity using SNI, IP, port and HTTP Host.",
+            ),
+        ]
+
+        sections = [
+            (
+                profile_text(
+                    mode,
+                    "CONNECTIVITÉ ET ADRESSAGE",
+                    "CONNECTIVITY & ADDRESSING",
+                ),
+                options[:3],
+            ),
+            (
+                profile_text(
+                    mode,
+                    "RENSEIGNEMENT ET SÉCURITÉ",
+                    "NETWORK INTELLIGENCE & SECURITY",
+                ),
+                options[3:8],
+            ),
+            (
+                profile_text(
+                    mode,
+                    "PERFORMANCE ET TRAFIC",
+                    "PERFORMANCE & TRAFFIC",
+                ),
+                options[8:10],
+            ),
+            (
+                profile_text(
+                    mode,
+                    "ANALYSE AVANCÉE",
+                    "ADVANCED NETWORK ANALYSIS",
+                ),
+                options[10:],
+            ),
+        ]
+
+        for title, items in sections:
+            section(title)
+
+            for number, beginner_name, expert_name, beginner_desc, expert_desc in items:
+                name = expert_name if expert else beginner_name
+                description = expert_desc if expert else beginner_desc
+
+                print(
+                    f"  [{number.zfill(2)}] "
+                    + colorize(name, Colors.WHITE + Colors.BOLD)
+                )
+                print(
+                    "       "
+                    + colorize(description, Colors.GREY)
+                )
+
+        separator(width=56)
+
+        message(
+            profile_text(
+                mode,
+                "[00] Retour au menu principal",
+                "[00] RETURN TO CONTROL CENTER",
+            ),
+            Colors.YELLOW,
+        )
+
+        choice = input(
+            profile_text(
+                mode,
+                "\nSélectionne un outil : ",
+                "\nSelect a diagnostic module : ",
+            )
+        ).strip()
 
         try:
             if choice == "0":
@@ -193,7 +358,7 @@ def run_independent_tool(mode):
                 result = CertificateTransparencyMonitor().analyze(domain)
                 show_result(result, mode)
 
-                if mode == "2" and result.evidence:
+                if expert and result.evidence:
                     browse_ct_results(result)
 
             elif choice == "9":
@@ -202,17 +367,39 @@ def run_independent_tool(mode):
             elif choice == "10":
                 run_network_quality_monitor()
 
+            elif choice == "11":
+                run_zero_rating_lab(mode)
+
             else:
-                print("[!] Option invalide.")
+                message(
+                    profile_text(
+                        mode,
+                        "[!] Option invalide. Réessaie.",
+                        "[!] INVALID SELECTION.",
+                    ),
+                    Colors.YELLOW,
+                )
 
         except KeyboardInterrupt:
-            print("\n[!] Opération interrompue.")
+            message(
+                "\nOpération interrompue.",
+                Colors.YELLOW,
+            )
 
         except Exception as error:
-            print("\n[ERREUR] L'outil n'a pas pu terminer.")
-            if mode == "2":
-                print("Détail technique :", repr(error))
+            message(
+                "\nUne erreur empêche le diagnostic de se terminer.",
+                Colors.RED,
+            )
+            if expert:
+                message(f"Détail technique : {error!r}", Colors.GREY)
             else:
-                print("Vérifie la cible et réessaie.")
+                message("Vérifie la cible et réessaie.", Colors.YELLOW)
 
-        input("\nAppuie sur Entrée pour revenir aux outils...")
+        input(
+            profile_text(
+                mode,
+                "\nAppuie sur Entrée pour revenir aux outils...",
+                "\nPress Enter to return to diagnostic modules...",
+            )
+        )

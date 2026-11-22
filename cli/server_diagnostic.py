@@ -4,6 +4,7 @@ from datetime import datetime
 from diagnostics.device_engine import DeviceDiagnosticEngine
 from diagnostics.report_interpreter import ReportInterpreter
 from core.results import TestStatus
+from core.display import status_label
 
 
 VERSION = "2.0"
@@ -127,17 +128,6 @@ def choose_mode():
         print("Choix invalide. Tape 1 ou 2.")
 
 
-def status_label(status):
-    labels = {
-        TestStatus.PASSED: "RÉUSSI",
-        TestStatus.FAILED: "ÉCHEC",
-        TestStatus.WARNING: "AVERTISSEMENT",
-        TestStatus.SKIPPED: "IGNORÉ",
-        TestStatus.ERROR: "ERREUR",
-        TestStatus.PENDING: "EN ATTENTE",
-    }
-
-    return labels.get(status, str(status))
 
 
 
