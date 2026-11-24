@@ -15,7 +15,6 @@ from core.display import (
     message,
 )
 
-
 VERSION = "2.0"
 
 
@@ -95,8 +94,10 @@ def show_capabilities(mode):
                     ("ASN", "Identifier le réseau auquel appartient une IP."),
                     ("TLS", "Examiner la connexion sécurisée et son certificat."),
                     ("HTTP", "Observer la réponse d'un serveur web."),
-                    ("CERTIFICATE TRANSPARENCY",
-                     "Rechercher des certificats et des sous-domaines publiés."),
+                    (
+                        "CERTIFICATE TRANSPARENCY",
+                        "Rechercher des certificats et des sous-domaines publiés.",
+                    ),
                 ],
             ),
             (
@@ -124,8 +125,10 @@ def show_capabilities(mode):
                     ("ASN", "Identification des systèmes autonomes et réseaux annoncés."),
                     ("TLS", "Inspection de la négociation TLS et des certificats."),
                     ("HTTP", "Analyse des réponses et métadonnées HTTP/HTTPS."),
-                    ("CERTIFICATE TRANSPARENCY",
-                     "Exploration passive des certificats et noms DNS publiés."),
+                    (
+                        "CERTIFICATE TRANSPARENCY",
+                        "Exploration passive des certificats et noms DNS publiés.",
+                    ),
                 ],
             ),
             (
@@ -190,6 +193,11 @@ def show_main_menu(mode):
                 "Configuration du profil d'exploitation",
                 "Modifier le niveau de présentation technique.",
             ),
+            (
+                "06",
+                "SERVER INTELLIGENCE",
+                "Découverte passive et audit Web autorisé.",
+            ),
             ("00", "Fermer la plateforme", "Terminer la session ARCHI MONITOR."),
         ]
     else:
@@ -218,6 +226,11 @@ def show_main_menu(mode):
                 "05",
                 "Changer de profil",
                 "Passer du mode Débutant au mode Expert.",
+            ),
+            (
+                "06",
+                "SERVER INTELLIGENCE",
+                "Découvrir les informations publiques et auditer un site autorisé.",
             ),
             ("00", "Quitter ARCHI MONITOR", "Fermer le programme."),
         ]
@@ -269,6 +282,22 @@ def main():
 
         elif choice in ("5", "05"):
             mode = choose_mode()
+
+        elif choice in ("6", "06"):
+            try:
+                from cli.server_intelligence import main as run_server_intelligence
+                run_server_intelligence()
+            except KeyboardInterrupt:
+                message(
+                    "\nSERVER INTELLIGENCE interrompu par l'utilisateur.",
+                    Colors.YELLOW,
+                )
+            except Exception as exc:
+                message(
+                    f"Erreur SERVER INTELLIGENCE : {type(exc).__name__}: {exc}",
+                    Colors.YELLOW,
+                )
+                input("\nAppuie sur Entrée pour revenir au centre de contrôle...")
 
         elif choice in ("0", "00", "q", "quit", "exit"):
             print()
